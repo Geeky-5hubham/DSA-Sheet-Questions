@@ -37,6 +37,6 @@ public:
     
     int numTrees(int n) {
         vector<int> dp(n+1,-1);
-        return solve_memoisation(n,dp);
+        return solve_Tabulation(n);
     }
 };
