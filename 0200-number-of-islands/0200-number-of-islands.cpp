@@ -21,11 +21,13 @@ private:
               int newr = row+i;
               int newc = col+i;
               
+              // New row is inside the grid & is not visited & is Land
               if(newr>=0 && newr<n && !vis[newr][col] && grid[newr][col]=='1')
               {
                   vis[newr][col] =true;
                   q.push({newr,col});
               }
+              //  New col is inside the grid & is not visited & is Land
                if(newc>=0 && newc<m && !vis[row][newc] && grid[row][newc]=='1')
               {
                   vis[row][newc] =true;
