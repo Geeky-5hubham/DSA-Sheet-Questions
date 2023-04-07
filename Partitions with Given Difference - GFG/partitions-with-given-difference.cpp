@@ -7,7 +7,7 @@ using namespace std;
 class Solution {
   public:
     int mod = (int)(1e9+7);
-    int f(int i,int target,vector<int>& arr,vector<vector<int>>& dp){
+    /*int f(int i,int target,vector<int>& arr,vector<vector<int>>& dp){
         if(i == 0){
             if(arr[0] == 0 && target == 0)      return 2;
             if(target == 0 || target == arr[0])     return 1;
@@ -23,7 +23,7 @@ class Solution {
             take = f(i-1,target-arr[i],arr,dp);
             
         return dp[i][target] = (take + notTake) % mod;
-    }
+    }*/
     
     int countPartitions(int n, int d, vector<int>& arr) {
         int sum = 0;
@@ -34,8 +34,33 @@ class Solution {
             return 0;
         else{
             int target = (d+sum)/2;
-            vector<vector<int>> dp(n,vector<int> (target+1,-1));
-            return f(n-1,target,arr,dp);
+            vector<vector<int>> dp(n,vector<int> (target+1,0));
+            
+            if(arr[0] == 0)    
+                dp[0][0] = 2;
+            
+            else    
+                dp[0][0] = 1;
+            
+            if(arr[0] != 0 && arr[0] <= target)    
+                dp[0][arr[0]] = 1;
+                
+            for(int i=1;i<n;i++){
+                for(int t=0;t<=target;t++){
+                    
+                    int notTake = dp[i-1][t];
+        
+                    int take = 0;
+                    if(arr[i] <= t)
+                        take = dp[i-1][t-arr[i]];
+                        
+                    dp[i][t] = (take + notTake) % mod;
+                    
+                }
+            }
+            
+            
+            return dp[n-1][target];
         }
         
     }
