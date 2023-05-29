@@ -3,13 +3,7 @@ public:
     string reverseWords(string s) {
         vector<string> v;
         
-        if(s.size() == 1){
-            if(s == " ")
-                return "";
-            
-            else
-                return s;
-        }
+        
         
         string temp = "";
         for(int i=0;i<s.size();i++){
