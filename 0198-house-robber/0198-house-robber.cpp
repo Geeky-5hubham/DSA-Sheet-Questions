@@ -17,8 +17,18 @@ public:
     
     int rob(vector<int>& nums) {
         int n = nums.size();
-        vector<int> dp(n,-1);
+        vector<int> dp(n+1,-1);
         
-        return solve(n-1,nums,dp);
+        dp[-1+1] = 0;
+        dp[0+1]  =  nums[0];
+        
+        for(int i=1;i<n;i++){
+            int pick = nums[i] + dp[i-2+1];
+            int notPick = 0 + dp[i-1+1];
+        
+            dp[i+1] = max(pick,notPick);
+        }
+        
+        return dp[n];
     }
 };
