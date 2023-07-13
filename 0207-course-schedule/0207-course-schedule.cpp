@@ -1,46 +1,50 @@
 class Solution {
 public:
-    
-    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    bool dfs(int node,vector<int> &vis,vector<int> &path_vis,vector<vector<int>> &adj){
+        vis[node] = 1;
+        path_vis[node] = 1;
         
-        int V = numCourses;
-        vector<vector<int>> adj(V);
-        
-        for(auto it:prerequisites){
-            adj[it[1]].push_back(it[0]);
+        for(auto it:adj[node]){
+            if(!vis[it]){
+                if(dfs(it,vis,path_vis,adj) == true){
+                    return true;
+                }
+            }
+            
+            //if the node has been previously visited and on the same path
+            else if(path_vis[it] == 1){
+                return true;
+            }
         }
         
-        vector<int> topo;
-	    vector<int> inDegree(V,0);
-	    
-	    for(int i=0;i<V;i++){
-	        for(auto it:adj[i]){
-	            inDegree[it]++;
-	        }
-	    }
-	    
-	    queue<int> q;
-	    for(int i=0;i<V;i++){
-	        if(inDegree[i] == 0){
-	            q.push(i);
-	        }
-	    }
-	    
-	    while(!q.empty()){
-	        int node = q.front();
-	        q.pop();
-	        topo.push_back(node);
-	        
-	        for(auto it:adj[node]){
-                inDegree[it]--;
-                if(inDegree[it] == 0){
-                    q.push(it);
-                }
-	        }
-	        
-	    }
-        if(topo.size() == numCourses)   return true;
-        else    return false;
+        path_vis[node] = 0;
+        return false;
         
+    }
+    
+
+    
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        
+        vector<vector<int>> adj(n);
+        
+        for(auto it:prerequisites){
+            int u = it[0]; // course u is dependent on course v
+            int v = it[1]; // course v should be completed before taking course u
+        
+            adj[v].push_back(u);
+        }
+        
+        vector<int> vis(n,0),path_vis(n,0);
+        
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                if(dfs(i,vis,path_vis,adj) == true)
+                    return false;
+            }
+        }
+        
+        return true;
     }
 };
