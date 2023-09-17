@@ -1,45 +1,31 @@
 class Solution {
 public:
-    int minimumEffortPath(vector<vector<int>>& heights) {
-        int n = heights.size();
-        int m = heights[0].size();
-
-        vector<vector<int>> effort(n,vector<int> (m,1e9));
-        effort[0][0] = 0;
-        
-        priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>> > pq;    // {effort,row,col}
-        pq.push({0,0,0});
-        
-        while(!pq.empty()){
-            auto it = pq.top();
-            pq.pop();
-            int eff = it[0];
-            int r = it[1];
-            int c = it[2];
-            
-            
-            if(r == n-1 && c == m-1)
-                return effort[r][c];
-                        
-            
-            int delRow[4] = {-1,+1,0,0};
-            int delCol[4] = {0,0,-1,+1};
-            
-            for(int i=0;i<4;i++){
-                int newRow = r + delRow[i];
-                int newCol = c + delCol[i];
+    int dir[5]={1,0,-1,0,1};
+    int minimumEffortPath(vector<vector<int>>& heights)
+    {
+        int m=heights.size(),n=heights[0].size();
+        priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>> q;
+        q.push({0,0,0});//eff,row,col
+        while(!q.empty())
+        {
+            vector<int> v=q.top();
+            q.pop();
+            int eff=v[0],x=v[1],y=v[2];
+            if(x==m-1&&y==n-1)
+                return eff;
+            if(x<0||y<0||x>=m||y>=n||heights[x][y]==0)
+                continue;
+            for(int i=0;i<4;i++)
+            {
+                int nx=x+dir[i],ny=y+dir[i+1];
+                if(nx <= m-1 && ny <= n-1 && nx >=0 && ny>=0)
+                q.push({max(eff,abs(heights[x][y]-heights[nx][ny])),nx,ny});
                 
-                if(newRow >= 0 && newRow < n && newCol >= 0 && newCol < m ){
-                    int newEffort = max(abs(heights[newRow][newCol] - heights[r][c]),eff);
-                    
-                    if(newEffort < effort[newRow][newCol]){
-                        effort[newRow][newCol] = newEffort;
-                        pq.push({newEffort,newRow,newCol});
-                    }
-               
-                }
             }
+            heights[x][y]=0;
+            
         }
+        
         return 0;
     }
 };
